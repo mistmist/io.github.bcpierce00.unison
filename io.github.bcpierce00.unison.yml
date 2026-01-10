@@ -66,8 +66,8 @@ modules:
     sources:
       - type: "git"
         url: "https://github.com/bcpierce00/unison.git"
-        tag: "v2.53.7"
-        commit: "96e15a800bb0e619da6f7092ddefc47101c3092f"
+        tag: "v2.53.8"
+        commit: "36bdb88f96477d121d5d7b49a93fc5e316b6534c"
       - type: "file"
         path: "io.github.bcpierce00.unison.desktop"
       - type: "file"

@@ -23,6 +23,16 @@
   <url type="homepage">https://github.com/bcpierce00/unison</url>
   <launchable type="desktop-id">io.github.bcpierce00.unison.desktop</launchable>
   <releases>
+    <release version="2.53.8" date="2026-01-10">
+      <url type="details">https://github.com/bcpierce00/unison/releases/tag/v2.53.8</url>
+      <description>
+        <ul>
+          <li>Add ability to use reflinking instead of copying (if supported by filesystem).</li>
+          <li>Don't write file fingerprint cache if it is not necessary.</li>
+          <li>Experimental default-off support to detect moves/renames and rename on destination instead of copying (see -moves-experimental).</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.53.7" date="2025-04-21">
       <url type="details">https://github.com/bcpierce00/unison/releases/tag/v2.53.7</url>
       <description>
