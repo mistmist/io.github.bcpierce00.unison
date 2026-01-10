@@ -21,6 +21,7 @@
     </p>
   </description>
   <url type="homepage">https://github.com/bcpierce00/unison</url>
+  <url type="vcs-browser">https://github.com/bcpierce00/unison</url>
   <launchable type="desktop-id">io.github.bcpierce00.unison.desktop</launchable>
   <releases>
     <release version="2.53.8" date="2026-01-10">
