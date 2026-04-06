@@ -1,9 +1,7 @@
 app-id: "io.github.bcpierce00.unison"
 runtime: "org.freedesktop.Platform"
-runtime-version: "24.08"
+runtime-version: "25.08"
 sdk: "org.freedesktop.Sdk"
-sdk-extensions:
-  - "org.freedesktop.Sdk.Extension.ocaml"
 
 command: "unison-gui"
 finish-args:
@@ -20,16 +18,50 @@ finish-args:
   - "--socket=fallback-x11"
 
 build-options:
-  append-path: "/usr/lib/sdk/ocaml/bin"
+  append-path: "/app/share/runtime/ocaml/bin"
   env:
     OCAMLPATH: "/app/share/runtime/ocaml/lib"
 
 cleanup:
-  # delete ocaml static libs, leave license files in place (in doc/)...
-  - "/share/runtime/ocaml/bin"
-  - "/share/runtime/ocaml/lib"
+  # delete ocaml build tools, all licenses have been copied by builder
+  - "/share/runtime"
 
 modules:
+  - name: "ocaml"
+    buildsystem: "autotools"
+    config-opts:
+      - "--prefix=/app/share/runtime/ocaml"
+    sources:
+      - type: "archive"
+        url: "https://github.com/ocaml/ocaml/archive/refs/tags/5.2.0.tar.gz"
+        sha256: "48554abfd530fcdaa08f23f801b699e4f74c320ddf7d0bd56b0e8c24e55fc911"
+
+  - name: "dune"
+    buildsystem: "simple"
+    sources:
+      - type: "archive"
+        url: "https://github.com/ocaml/dune/archive/refs/tags/3.16.0.tar.gz"
+        sha256: "cf141fe2113d95faab9714bc3203f4665ba58c7e0c4450f9a719f1ba075cd214"
+      # bootstrapping problem: dune-rpc-lwt requires lwt requires dune
+      - type: "patch"
+        path: "ocaml-dune-no-lwt.patch"
+    build-commands:
+      - "rm -fr otherlibs/dune-rpc-lwt dune-rpc-lwt.opam"
+      # configure doesn't know prefix?
+      - "./configure
+          --bindir=/app/share/runtime/ocaml/bin
+          --sbindir=/app/share/runtime/ocaml/bin
+          --libdir=/app/share/runtime/ocaml/lib/ocaml
+          --docdir=/app/share/runtime/ocaml/share/doc
+          --mandir=/app/share/runtime/ocaml/share/man
+          --datadir=/app/share/runtime/ocaml/share/data
+          --etcdir=/app/share/runtime/ocaml/etc"
+      - "make release"
+      - "./dune.exe build --verbose --release @install"
+      - "PREFIX=/app/share/runtime/ocaml make install"
+      # install the libraries too (e.g. dune-configurator)
+      - "dune install --prefix /app/share/runtime/ocaml"
+
   - name: "camlp-streams"
     sources:
       - type: "git"
@@ -39,7 +71,7 @@ modules:
     buildsystem: "simple"
     build-commands:
       - "dune build"
-      - "dune install --prefix ${FLATPAK_DEST}/share/runtime/ocaml"
+      - "dune install --prefix /app/share/runtime/ocaml"
 
   - name: "ocaml-cairo"
     sources:
@@ -50,7 +82,7 @@ modules:
     build-commands:
       # avoid building stuff that depends on lablgtk...
       - "dune build -p cairo2 @install"
-      - "dune install -p cairo2 --prefix ${FLATPAK_DEST}/share/runtime/ocaml"
+      - "dune install -p cairo2 --prefix /app/share/runtime/ocaml"
 
   - name: "lablgtk"
     sources:
@@ -60,7 +92,7 @@ modules:
     buildsystem: "simple"
     build-commands:
       - "dune build -p lablgtk3"
-      - "dune install -p lablgtk3 --prefix ${FLATPAK_DEST}/share/runtime/ocaml"
+      - "dune install -p lablgtk3 --prefix /app/share/runtime/ocaml"
 
   - name: "unison"
     sources:

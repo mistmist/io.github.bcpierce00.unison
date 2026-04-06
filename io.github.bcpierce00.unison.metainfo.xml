@@ -24,6 +24,11 @@
   <url type="vcs-browser">https://github.com/bcpierce00/unison</url>
   <launchable type="desktop-id">io.github.bcpierce00.unison.desktop</launchable>
   <releases>
+    <release version="2.53.8-2" date="2026-04-06">
+      <description>
+        <p>Switched to runtime version 25.08.</p>
+      </description>
+    </release>
     <release version="2.53.8" date="2026-01-10">
       <url type="details">https://github.com/bcpierce00/unison/releases/tag/v2.53.8</url>
       <description>
